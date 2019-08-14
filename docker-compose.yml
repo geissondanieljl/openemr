@@ -6,16 +6,16 @@
 #   if not provided, then default to openemr, openemr, admin, and pass respectively.
 version: '3.1'
 services:
-  # mysql:
-  #   restart: always
-  #   image: mariadb:10.4
-  #   command: ['mysqld','--character-set-server=utf8']
-  #   ports:
-  #   - 3306:3306
-  #   volumes:
-  #   - databasevolume:/var/lib/mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: rootpwd
+  mysql:
+    restart: always
+    image: mariadb:10.4
+    command: ['mysqld','--character-set-server=utf8']
+    ports:
+    - 3306:3306
+    volumes:
+    - databasevolume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpwd
   openemr:
     restart: always
     # use an image if you're not changing the build steps:
@@ -37,7 +37,7 @@ services:
     - vendordir:/var/www/localhost/htdocs/openemr/vendor:rw
     - ccdamodule:/var/www/localhost/htdocs/openemr/ccdaservice:rw
     environment:
-      MYSQL_HOST: localhost
+      MYSQL_HOST: mysql
       MYSQL_ROOT_PASS: rootpwd
       #MYSQL_USER: openemr
       #MYSQL_PASS: openemr
@@ -46,15 +46,15 @@ services:
       FLEX_REPOSITORY: https://github.com/geissondanieljl/openemr-dev.git
       FLEX_REPOSITORY_BRANCH: master
       EASY_DEV_MODE: "yes"
-    # depends_on:
-    # - mysql
-  # phpmyadmin:
-  #   restart: always
-  #   image: phpmyadmin/phpmyadmin
-  #   ports:
-  #   - 81:80
-  #   environment:
-  #     PMA_HOSTS: mysql
+    depends_on:
+    - mysql
+  phpmyadmin:
+    restart: always
+    image: phpmyadmin/phpmyadmin
+    ports:
+    - 81:80
+    environment:
+      PMA_HOSTS: mysql
 volumes:
   databasevolume: {}
   assetsvolume01: {}

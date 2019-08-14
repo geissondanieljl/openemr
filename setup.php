@@ -141,7 +141,7 @@ if (!$COMMAND_LINE && empty($_REQUEST['site'])) {
                 <div class="row">
                 <div class="col-sm-12">
                     <div class="page-header">
-                        <h2>OpenEMR Setup <a class="oe-pull-away oe-help-redirect" data-target="#myModal" data-toggle="modal" href="#" id="help-href" name="help-href" style="color:#676666" title="Click to view Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a></h2>
+                        <h2>Daniel OpenEMR Setup <a class="oe-pull-away oe-help-redirect" data-target="#myModal" data-toggle="modal" href="#" id="help-href" name="help-href" style="color:#676666" title="Click to view Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a></h2>
                     </div>
                 </div>
             </div>

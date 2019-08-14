@@ -39,10 +39,10 @@ services:
     environment:
       MYSQL_HOST: mysql
       MYSQL_ROOT_PASS: rootpwd
-      MYSQL_USER: openemr
-      MYSQL_PASS: openemr
-      OE_USER: admin
-      OE_PASS: pass
+      #MYSQL_USER: openemr
+      #MYSQL_PASS: openemr
+      #OE_USER: admin
+      #OE_PASS: pass
       FLEX_REPOSITORY: https://github.com/geissondanieljl/openemr-dev.git
       FLEX_REPOSITORY_BRANCH: master
       EASY_DEV_MODE: "yes"

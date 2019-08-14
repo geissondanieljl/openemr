@@ -120,7 +120,7 @@ if (!$COMMAND_LINE && empty($_REQUEST['site'])) {
     <!DOCTYPE html>
     <html>
     <head>
-        <title>OpenEMR Setup Tool</title>
+        <title>Daniel OpenEMR Setup Tool</title>
         <!--<link rel=stylesheet href="interface/themes/style_blue.css">-->
         <link rel="stylesheet" href="public/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="public/assets/jquery-ui/jquery-ui.css" type="text/css">

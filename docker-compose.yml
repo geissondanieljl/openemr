@@ -11,11 +11,11 @@ services:
     image: mariadb:10.4
     command: ['mysqld','--character-set-server=utf8']
     ports:
-    - 8320:3306
+    - 3306:3306
     volumes:
     - databasevolume:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: rootpwd
   openemr:
     restart: always
     # use an image if you're not changing the build steps:
@@ -38,13 +38,13 @@ services:
     - ccdamodule:/var/www/localhost/htdocs/openemr/ccdaservice:rw
     environment:
       MYSQL_HOST: mysql
-      MYSQL_ROOT_PASS: root
+      MYSQL_ROOT_PASS: rootpwd
       MYSQL_USER: openemr
       MYSQL_PASS: openemr
       OE_USER: admin
       OE_PASS: pass
-      FLEX_REPOSITORY: https://github.com/openemr/openemr.git
-      FLEX_REPOSITORY_BRANCH: master
+      #FLEX_REPOSITORY: https://github.com/geissondanieljl/openemr.git
+      #FLEX_REPOSITORY_BRANCH: master
       EASY_DEV_MODE: "yes"
     depends_on:
     - mysql
@@ -52,7 +52,7 @@ services:
     restart: always
     image: phpmyadmin/phpmyadmin
     ports:
-    - 8310:80
+    - 81:80
     environment:
       PMA_HOSTS: mysql
 volumes:

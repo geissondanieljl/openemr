@@ -29,7 +29,7 @@ set_time_limit(0);
 // Warning. If you set $allow_multisite_setup to true, this is a potential security vulnerability.
 // Recommend setting it back to false (or removing this setup.php script entirely) after you
 //  are done with the multisite procedure.
-$allow_multisite_setup = false;
+$allow_multisite_setup = true;
 
 // Warning. If you set $allow_cloning_setup to true, this is a potential security vulnerability.
 // Recommend setting it back to false (or removing this setup.php script entirely) after you
@@ -120,7 +120,7 @@ if (!$COMMAND_LINE && empty($_REQUEST['site'])) {
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Daniel OpenEMR Setup Tool</title>
+        <title>OpenEMR Setup Tool</title>
         <!--<link rel=stylesheet href="interface/themes/style_blue.css">-->
         <link rel="stylesheet" href="public/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="public/assets/jquery-ui/jquery-ui.css" type="text/css">
@@ -141,7 +141,7 @@ if (!$COMMAND_LINE && empty($_REQUEST['site'])) {
                 <div class="row">
                 <div class="col-sm-12">
                     <div class="page-header">
-                        <h2>Daniel OpenEMR Setup <a class="oe-pull-away oe-help-redirect" data-target="#myModal" data-toggle="modal" href="#" id="help-href" name="help-href" style="color:#676666" title="Click to view Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a></h2>
+                        <h2>OpenEMR Setup <a class="oe-pull-away oe-help-redirect" data-target="#myModal" data-toggle="modal" href="#" id="help-href" name="help-href" style="color:#676666" title="Click to view Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a></h2>
                     </div>
                 </div>
             </div>
@@ -230,7 +230,7 @@ if (file_exists($OE_SITE_DIR)) {
 ?>
 <html>
 <head>
-<title>Daniel OpenEMR Setup Tool</title>
+<title>OpenEMR Setup Tool</title>
 <!--<link rel=stylesheet href="interface/themes/style_blue.css">-->
 <link rel="stylesheet" href="public/assets/bootstrap/dist/css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="public/assets/jquery-ui/jquery-ui.css" type="text/css">

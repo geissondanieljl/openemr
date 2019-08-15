@@ -102,7 +102,7 @@ if (count($emr_app)) {
 
     <?php Header::setupHeader(['jquery-ui', 'jquery-ui-darkness']); ?>
 
-    <title><?php echo text($openemr_name) . " " . xlt('Login'); ?></title>
+    <title>Daniel | <?php echo text($openemr_name) . " " . xlt('Login'); ?></title>
 
     <link rel="stylesheet" href="../themes/login.css?v=<?php echo $v_js_includes; ?>" type="text/css">
 

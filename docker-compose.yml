@@ -14,7 +14,7 @@ services:
     - 3306:3306
     volumes:
     - databasevolume:/var/lib/mysql
-    - ./docker-config/mysql-conf:/etc/mysql/mariadb.conf.d:r
+    - ./docker-config/mysql-conf:/etc/mysql/mariadb.conf.d
     environment:
       MYSQL_ROOT_PASSWORD: rootpwd
   openemr:

@@ -40,6 +40,7 @@ services:
     environment:
       MYSQL_HOST: mysql
       MYSQL_ROOT_PASS: rootpwd
+      MANUAL_SETUP: "yes"
       #MYSQL_USER: openemr
       #MYSQL_PASS: openemr
       #OE_USER: admin

@@ -60,14 +60,13 @@ class AuthRestController
         }
         
         $user = sqlQuery("SELECT id FROM users_secure WHERE username = ?", array($authPayload['username']));
-        http_response_code(200);
-        return $user["id"];
         
         $sql = " INSERT INTO api_token SET";
         $sql .= "     user_id=?,";
         $sql .= "     token=?,";
         $sql .= "     expiry=DATE_ADD(NOW(), INTERVAL 1 HOUR)";
-        sqlStatement($sql, [$user["id"], $new_token]);
+        http_response_code(200);
+        return sqlStatement($sql, [$user["id"], $new_token]);
 
         $encoded_token = $new_token . $encoded_api_site;
         $give = array("token_type" => "Bearer", "access_token" => $encoded_token, "expires_in" => "3600");

@@ -58,11 +58,11 @@ class AuthRestController
             error_log("OpenEMR Error: API was unable to create a random Bearer token");
             return;
         }
-        http_response_code(200);
-        return $new_token;
-
+        
         $user = sqlQuery("SELECT id FROM users_secure WHERE username = ?", array($authPayload['username']));
-
+        http_response_code(200);
+        return $user["id"];
+        
         $sql = " INSERT INTO api_token SET";
         $sql .= "     user_id=?,";
         $sql .= "     token=?,";

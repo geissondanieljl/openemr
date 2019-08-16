@@ -38,14 +38,14 @@ class AuthRestController
 
         $is_valid = confirm_user_password($authPayload["username"], $authPayload["password"]);
         if (!$is_valid) {
-            http_response_code(401);
+            http_response_code(200);
             return;
         }
 
         if (!empty($_SESSION['api']) && !empty($_SESSION['site_id'])) {
             $encoded_api_site = bin2hex(trim($_SESSION['api']) . trim($_SESSION['site_id']));
         } else {
-            http_response_code(401);
+            http_response_code(501);
             return;
         }
 

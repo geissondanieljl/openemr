@@ -43,10 +43,9 @@ class AuthRestController
             return;
         }
                 
-        http_response_code(200);
-        return;
-        
         if (!empty($_SESSION['api']) && !empty($_SESSION['site_id'])) {
+            http_response_code(200);
+            return;
             $encoded_api_site = bin2hex(trim($_SESSION['api']) . trim($_SESSION['site_id']));
         } else {
             http_response_code(401);

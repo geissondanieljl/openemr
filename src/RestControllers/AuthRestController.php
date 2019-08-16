@@ -31,6 +31,8 @@ class AuthRestController
             return;
         }
 
+        http_response_code(200);
+        return;
         if (empty($authPayload["username"]) || empty($authPayload["password"])) {
             http_response_code(401);
             return;
@@ -41,8 +43,7 @@ class AuthRestController
             http_response_code(401);
             return;
         }
-        http_response_code(200);
-        return;
+        
         if (!empty($_SESSION['api']) && !empty($_SESSION['site_id'])) {
             $encoded_api_site = bin2hex(trim($_SESSION['api']) . trim($_SESSION['site_id']));
         } else {

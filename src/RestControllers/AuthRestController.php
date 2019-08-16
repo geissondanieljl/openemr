@@ -44,8 +44,6 @@ class AuthRestController
         }
                 
         if (!empty($_SESSION['api']) && !empty($_SESSION['site_id'])) {
-            http_response_code(200);
-            return;
             $encoded_api_site = bin2hex(trim($_SESSION['api']) . trim($_SESSION['site_id']));
         } else {
             http_response_code(401);
@@ -60,6 +58,8 @@ class AuthRestController
             error_log("OpenEMR Error: API was unable to create a random Bearer token");
             return;
         }
+        http_response_code(200);
+        return $new_token;
 
         $user = sqlQuery("SELECT id FROM users_secure WHERE username = ?", array($authPayload['username']));
 

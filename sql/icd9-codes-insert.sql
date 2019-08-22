@@ -145,6 +145,9 @@ INSERT INTO codes ( code_type, code, modifier, code_text  ) VALUES ( 2, '011.50'
 INSERT INTO codes ( code_type, code, modifier, code_text  ) VALUES ( 2, '011.51', '', 'Tuberculous bronchiectasis bacteriological or histological examination not done' );
 INSERT INTO codes ( code_type, code, modifier, code_text  ) VALUES ( 2, '011.52', '', 'Tuberculous bronchiectasis bacteriological or histological examination results unknown (at present)' );
 INSERT INTO codes ( code_type, code, modifier, code_text  ) VALUES ( 2, '011.53', '', 'Tuberculous bronchiectasis tubercle bacilli found (in sputum) by microscopy' );
+
+
+
 INSERT INTO codes ( code_type, code, modifier, code_text  ) VALUES ( 2, '011.54', '', 'Tuberculous bronchiectasis tubercle bacilli not found (in sputum) by microscopy but found by bacterial culture' );
 INSERT INTO codes ( code_type, code, modifier, code_text  ) VALUES ( 2, '011.55', '', 'Tuberculous bronchiectasis tubercle bacilli not found by bacteriological examination but tuberculosis confirmed histologically' );
 INSERT INTO codes ( code_type, code, modifier, code_text  ) VALUES ( 2, '011.56', '', 'Tuberculous bronchiectasis tubercle bacilli not found by bacteriological or histological examination but tuberculosis confirmed by other methods (inoculation of animals)' );

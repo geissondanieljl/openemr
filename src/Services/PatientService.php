@@ -224,7 +224,7 @@ class PatientService
                    ethnicity
                 FROM patient_data";
 
-        if ($search['name'] || $search['fname'] || $search['lname'] || $search['dob']) {
+        if ($search['name'] || $search['fname'] || $search['lname'] || $search['dob'] || $search['pubpid']) {
             $sql .= " WHERE ";
 
             $whereClauses = array();
@@ -232,6 +232,10 @@ class PatientService
                 $search['name'] = '%' . $search['name'] . '%';
                 array_push($whereClauses, "CONCAT(lname,' ', fname) LIKE ?");
                 array_push($sqlBindArray, $search['name']);
+            }
+            if ($search['pubpid']) {
+                array_push($whereClauses, "pubpid=?");
+                array_push($sqlBindArray, $search['pubpid']);
             }
             if ($search['fname']) {
                 array_push($whereClauses, "fname=?");

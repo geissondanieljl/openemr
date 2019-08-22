@@ -58,6 +58,7 @@ class PatientRestController
     public function getAll($search)
     {
         $serviceResult = $this->patientService->getAll(array(
+            'pubpid' => $search['pubpid'],
             'fname' => $search['fname'],
             'lname' => $search['lname'],
             'dob' => $search['dob']

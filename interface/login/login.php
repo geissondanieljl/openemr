@@ -171,7 +171,7 @@ if (count($emr_app)) {
                 <div class="col-sm-12">
                     <div>
                         <div class="center-block" style="max-width:400px">
-                            <img class="img-fluid img-responsive center-block" src="<?php echo $GLOBALS['images_static_relative']; ?>/login-logo.png" />
+                            <img class="img-fluid img-responsive center-block" src="<?php echo $GLOBALS['images_static_relative']; ?>/doctor-logo.jpeg" />
                         </div>
 
                         <input type='hidden' name='new_login_session_management' value='1' />

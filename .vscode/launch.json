@@ -12,7 +12,7 @@
             "log" : true,
             "stopOnEntry": false,
             "pathMappings": {
-                "/var/www/html": "/home/daniel/Documentos/openemr"
+                "/var/www/localhost/htdocs/openemr": "${fileDirname}"
             }
         },
         {

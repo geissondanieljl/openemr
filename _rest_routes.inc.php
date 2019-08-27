@@ -325,6 +325,9 @@ RestConfig::$ROUTE_MAP = array(
         RestConfig::authorization_check("patients", "notes");
         return (new MessageRestController())->delete($pid, $mid);
     },
+    "GET /api/avaliable-appointments" => function () {
+        return (new AppointmentRestController())->getCalendar($_GET);
+    },
 
 );
 

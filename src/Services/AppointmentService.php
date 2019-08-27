@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AppointmentService
  *
@@ -19,12 +20,11 @@ use Particle\Validator\Validator;
 class AppointmentService
 {
 
-  /**
-   * Default constructor.
-   */
+    /**
+     * Default constructor.
+     */
     public function __construct()
-    {
-    }
+    { }
 
     public function validate($appointment)
     {
@@ -147,5 +147,11 @@ class AppointmentService
     public function delete($eid)
     {
         return sqlStatement("DELETE FROM openemr_postcalendar_events WHERE pc_eid = ?", $eid);
+    }
+
+    public function getCalendar($data)
+    {
+        require $_SERVER['DOCUMENT_ROOT'] ."/interface/main/calendar/modules/get_calendar_api.php";
+        return $result;
     }
 }

@@ -59,4 +59,11 @@ class AppointmentRestController
         $serviceResult = $this->appointmentService->delete($eid);
         return RestControllerHelper::responseHandler($serviceResult, null, 200);
     }
+
+    public function getCalendar($data)
+    {
+        $serviceResult = $this->appointmentService->getCalendar($data);
+        //$this->appointmentService->getCalendar($data);
+        return RestControllerHelper::responseHandler($serviceResult, null, 200);
+    }
 }

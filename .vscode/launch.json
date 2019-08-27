@@ -11,8 +11,11 @@
             "port": 9000,
             "log" : true,
             "stopOnEntry": false,
+            "ignore":[
+                "**/vendor/**/*.php"
+            ],
             "pathMappings": {
-                "/var/www/localhost/htdocs/openemr": "${fileDirname}"
+                "/var/www/localhost/htdocs/openemr": "/home/daniel/Documentos/openemr"
             }
         },
         {

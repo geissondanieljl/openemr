@@ -281,16 +281,13 @@ if (!empty($slots)) {
             // echo "<div id='am'>AM ";
             $ampmFlag = "am";  // reset the AMPM flag
 
-            $result[$thisdate] = array(
-                'date' => text(oeFormatSDFT($utime)),
-                'slots' => array()
-            );
+            $result[$thisdate] = array();
         }
 
         $ampm = date('a', $utime);
         $ampmFlag = $ampm;
         $adate = getdate($utime);
-        $result[$thisdate]['slots'][] = date("h:i a", $utime);
+        $result[$thisdate][] = date("H:i", $utime);
         // If the duration is more than 1 slot, increment $i appropriately.
         // This is to avoid reporting available times on undesirable boundaries.
         $i += $evslots - 1;

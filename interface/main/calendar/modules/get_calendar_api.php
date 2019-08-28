@@ -287,7 +287,7 @@ if (!empty($slots)) {
         $ampm = date('a', $utime);
         $ampmFlag = $ampm;
         $adate = getdate($utime);
-        $result[$thisdate][] = date("H:i", $utime);
+        $result[$thisdate][] = date("Y-m-d H:i", $utime);
         // If the duration is more than 1 slot, increment $i appropriately.
         // This is to avoid reporting available times on undesirable boundaries.
         $i += $evslots - 1;

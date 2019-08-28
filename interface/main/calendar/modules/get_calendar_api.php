@@ -282,7 +282,6 @@ if (!empty($slots)) {
             $ampmFlag = "am";  // reset the AMPM flag
 
             $result[$thisdate] = array(
-                'name' => xlt($dayName),
                 'date' => text(oeFormatSDFT($utime)),
                 'slots' => array()
             );

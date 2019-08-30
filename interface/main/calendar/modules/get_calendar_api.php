@@ -27,7 +27,10 @@
  * 
  */
 
-// Id of inoffice event for search avaliable doctors
+/**
+ * Id of inoffice event for search avaliable doctors
+ * @author Daniel Jiménez
+ */
 define('ID_IN_OFFICE_EVENT', 2);
 
 /* -------------------------------------------------------------------------------------------------------- */
@@ -119,7 +122,14 @@ if (isset($_REQUEST['evdur'])) {
     $evslots = (int) (($evslots + $slotsecs - 1) / $slotsecs);
 }
 
+
+/**
+ * If we are looking for any provider we search all providers by facility or speciality (speciality in dev)
+ * @author Daniel Jiménez
+ */
 $providerId = null;
+$listProvidersId = array();
+$listFacilitiesId = array();
 if (empty($_REQUEST['providerid'])) {
     $sqlBindArray = array();
     $query = "SELECT pc_eventDate, pc_aid, pc_facility, pc_endDate, pc_startTime, pc_duration, " .
@@ -139,11 +149,17 @@ if (empty($_REQUEST['providerid'])) {
         $query .= " AND pc_facility = ?";
         array_push($sqlBindArray, $facility);
     }
+
+    /**
+     * we are just looking for the provider id and the facility
+     * @author Daniel Jiménez
+     */
     $query .= " GROUP BY pc_aid ORDER BY pc_aid";
 
     $doctorsList = fetchEvents($sdate, $edate, null, null, false, 0, $sqlBindArray, $query);
     foreach ($doctorsList as $row) {
         $listProvidersId[$row['pc_aid']] = $row['pc_aid'];
+        $listFacilitiesId[$row['pc_aid']] = $row['pc_facility'];
     }
 } else {
     $providerId = $_REQUEST['providerid'];
@@ -354,7 +370,7 @@ if (!empty($slotsByProvider)) {
             $utime = ($slotbase + $i) * $slotsecs;
             $thisdate = date("Y-m-d", $utime);
             $adate = getdate($utime);
-            $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId] = $providerId;
+            $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId] = $listFacilitiesId[$providerId];
             // $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId][] = array(
             //     'providerId' => $providerId,
             //     'datetime' => date("Y-m-d H:i", $utime)

@@ -10,7 +10,7 @@
  * 
  * No HTML, No JS
  * Relative paths to Absolute paths (In requires)
- * The content of doOneDay function has been move to events loop because a global variables issue (Line 220)
+ * The content of doOneDay function has been move to events loop for a global variables issue (Line 220)
  * Returns: 
  * $result = [
  *      'date' => [
@@ -26,6 +26,9 @@
  * ]
  * 
  */
+
+// Id of inoffice event for search avaliable doctors
+define('ID_IN_OFFICE_EVENT', 2);
 
 /* -------------------------------------------------------------------------------------------------------- */
 
@@ -52,74 +55,15 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/library/patient.inc");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/library/appointments.inc.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/interface/main/holidays/Holidays_Controller.php");
 
-?>
-
-<?php
-// // check access controls
-// if (!acl_check('patients', 'appt', '', array('write', 'wsome'))) {
-//     die(xlt('Access not allowed'));
-// }
-
 // If the caller is updating an existing event, then get its ID so
 // we don't count it as a reserved time slot.
 $eid = empty($_REQUEST['eid']) ? 0 : 0 + $_REQUEST['eid'];
 
 $input_catid = $_REQUEST['catid'];
 
-// Record an event into the slots array for a specified day.
-/**
- *  The content of this function is in ln 220
- */  
-/*
-function doOneDay($catid, $udate, $starttime, $duration, $prefcatid)
-{ 
-    global $slots, $slotsecs, $slotstime, $slotbase, $slotcount, $input_catid;
-    $udate = strtotime($starttime, $udate);
-    if ($udate < $slotstime) {
-        return;
-    }
-
-    $i = (int) ($udate / $slotsecs) - $slotbase;
-    $iend = (int) (($duration + $slotsecs - 1) / $slotsecs) + $i;
-    if ($iend > $slotcount) {
-        $iend = $slotcount;
-    }
-
-    if ($iend <= $i) {
-        $iend = $i + 1;
-    }
-
-    for (; $i < $iend; ++$i) {
-        if ($catid == 2) {        // in office
-            // If a category ID was specified when this popup was invoked, then select
-            // only IN events with a matching preferred category or with no preferred
-            // category; other IN events are to be treated as OUT events.
-            if ($input_catid) {
-                if ($prefcatid == $input_catid || !$prefcatid) {
-                    $slots[$i] |= 1;
-                } else {
-                    $slots[$i] |= 2;
-                }
-            } else {
-                $slots[$i] |= 1;
-            }
-
-            break; // ignore any positive duration for IN
-        } else if ($catid == 3) { // out of office
-            $slots[$i] |= 2;
-            break; // ignore any positive duration for OUT
-        } else { // all other events reserve time
-            $slots[$i] |= 4;
-        }
-    }
-}
-*/
-
 // seconds per time slot
-$slotsecs = $GLOBALS['calendar_interval'] * 60;
-
-
 $catslots = 1;
+$slotsecs = $GLOBALS['calendar_interval'] * 60;
 if ($input_catid) {
     $srow = sqlQuery("SELECT pc_duration FROM openemr_postcalendar_categories WHERE pc_catid = ?", array($input_catid));
     if ($srow['pc_duration']) {
@@ -175,10 +119,95 @@ if (isset($_REQUEST['evdur'])) {
     $evslots = (int) (($evslots + $slotsecs - 1) / $slotsecs);
 }
 
-// If we have a provider, search.
-//
-// if ($_REQUEST['providerid']) {
-    $providerid = empty($_REQUEST['providerid']) ? null : $_REQUEST['providerid'];
+$providerId = null;
+if (empty($_REQUEST['providerid'])) {
+    $sqlBindArray = array();
+    $query = "SELECT pc_eventDate, pc_aid, pc_facility, pc_endDate, pc_startTime, pc_duration, " .
+        "pc_recurrtype, pc_recurrspec, pc_alldayevent, pc_catid, pc_prefcatid " .
+        "FROM openemr_postcalendar_events " .
+        "WHERE pc_eid != ? AND " .
+        "((pc_endDate >= ? AND pc_eventDate < ? ) OR " .
+        "(pc_endDate = '0000-00-00' AND pc_eventDate >= ? AND pc_eventDate < ?))";
+
+    $query .= " AND pc_catid = " . ID_IN_OFFICE_EVENT;
+
+    array_push($sqlBindArray, $eid, $sdate, $edate, $sdate, $edate);
+
+    // phyaura whimmel facility filtering
+    if (!empty($_REQUEST['facility']) && $_REQUEST['facility'] > 0) {
+        $facility = $_REQUEST['facility'];
+        $query .= " AND pc_facility = ?";
+        array_push($sqlBindArray, $facility);
+    }
+    $query .= " GROUP BY pc_aid ORDER BY pc_aid";
+
+    $doctorsList = fetchEvents($sdate, $edate, null, null, false, 0, $sqlBindArray, $query);
+    foreach ($doctorsList as $row) {
+        $listProvidersId[$row['pc_aid']] = $row['pc_aid'];
+    }
+} else {
+    $providerId = $_REQUEST['providerid'];
+    $listProvidersId = array($providerId);
+}
+
+
+/**
+ * Indexing events and slots by provider
+ * @author Daniel Jiménez
+ */
+$slotsByProvider = array();
+$eventsListByProvider = array();
+
+// Note there is no need to sort the query results. => Change order is needed -DJ
+$query = "SELECT pc_eventDate, pc_eid, pc_aid, pc_facility, pc_endDate, pc_startTime, pc_duration, " .
+    "pc_recurrtype, pc_recurrspec, pc_alldayevent, pc_catid, pc_prefcatid " .
+    "FROM openemr_postcalendar_events " .
+    "WHERE pc_eid != ? AND " .
+    "((pc_endDate >= ? AND pc_eventDate < ? ) OR " .
+    "(pc_endDate = '0000-00-00' AND pc_eventDate >= ? AND pc_eventDate < ?))";
+$query .= " ORDER BY pc_aid ";
+
+/**
+ * $sqlBind reboot
+ * @author Daniel Jiménez
+ */
+$sqlBindArray = array();
+array_push($sqlBindArray, $eid, $sdate, $edate, $sdate, $edate);
+
+/**
+ * Change if we want search for any provider
+ * @author Daniel Jiménez
+ */
+if ($providerId != null) {
+    $query .= " AND pc_aid IN (" . implode(',', $listProvidersId) .  ") ";
+    array_push($sqlBindArray, $providerId);
+}
+
+// phyaura whimmel facility filtering
+if (!empty($_REQUEST['facility']) && $_REQUEST['facility'] > 0) {
+    $facility = $_REQUEST['facility'];
+    $query .= " AND pc_facility = ?";
+    array_push($sqlBindArray, $facility);
+}
+// end facility filtering whimmel 29apr08
+
+//////
+
+/**
+ * We only make one query for all doctors events indexed by doctor id
+ * @author Daniel Jiménez
+ */
+$events2 = fetchEvents($sdate, $edate, null, null, false, 0, $sqlBindArray, $query);
+foreach ($events2 as $row) {
+    $eventsListByProvider[$row['pc_aid']][$row['pc_eid']] = $row;
+}
+
+
+/**
+ * We make the process foreach doctor
+ * @author Daniel Jiménez
+ */
+foreach ($listProvidersId as $providerId) {
 
     // Create and initialize the slot array. Values are bit-mapped:
     //   bit 0 = in-office occurs here
@@ -189,55 +218,11 @@ if (isset($_REQUEST['evdur'])) {
     $slots = array_pad(array(), $slotcount, 0);
 
     /**
-     * Added for associate the slot with the provider and the facility
+     * The previously logic but foreach doctor and his own events 
+     * Inside this foreach is the doOneDay function content
      * @author Daniel Jiménez
      */
-    $providers = array_pad(array(), $slotcount, 0);
-    $facilities = array_pad(array(), $slotcount, 0);
-
-    $sqlBindArray = array();
-
-    // Note there is no need to sort the query results.
-    $query = "SELECT pc_eventDate, pc_aid, pc_facility, pc_endDate, pc_startTime, pc_duration, " .
-        "pc_recurrtype, pc_recurrspec, pc_alldayevent, pc_catid, pc_prefcatid " .
-        "FROM openemr_postcalendar_events " .
-        "WHERE pc_eid != ? AND " .
-        "((pc_endDate >= ? AND pc_eventDate < ? ) OR " .
-        "(pc_endDate = '0000-00-00' AND pc_eventDate >= ? AND pc_eventDate < ?))";
-
-    array_push($sqlBindArray, $eid, $sdate, $edate, $sdate, $edate);
-
-    /**
-     * Change if we want search for any provider
-     * @author Daniel Jiménez
-     */
-    if ($providerid != null) {
-        $query .= " AND pc_aid = ?";
-        array_push($sqlBindArray, $providerid);
-    }
-
-    // phyaura whimmel facility filtering
-    if ($_REQUEST['facility'] > 0) {
-        $facility = $_REQUEST['facility'];
-        $query .= " AND pc_facility = ?";
-        array_push($sqlBindArray, $facility);
-    }     
-    
-    // end facility filtering whimmel 29apr08
-
-    //////
-    $events2 = fetchEvents($sdate, $edate, null, null, false, 0, $sqlBindArray, $query);
-    foreach ($events2 as $row) {
-
-        /**
-         * Added for associate the slot with the provider and the facility
-         * @author Daniel Jiménez
-         */
-
-        $facilityId = $row['pc_facility'];
-        $providerId = $row['pc_aid'];
-
-        /* ------------------------------------------------------------- */
+    foreach ($eventsListByProvider[$providerId] as $row) {
 
         $thistime = strtotime($row['pc_eventDate'] . " 00:00:00");
         $catid = $row['pc_catid'];
@@ -270,8 +255,6 @@ if (isset($_REQUEST['evdur'])) {
                 if ($input_catid) {
                     if ($prefcatid == $input_catid || !$prefcatid) {
                         $slots[$i] |= 1; // here (i think)
-                        $providers[$i] = $providerId;
-                        $facilities[$i] = $facilityId;
                     } else {
                         $slots[$i] |= 2;
                     }
@@ -287,13 +270,7 @@ if (isset($_REQUEST['evdur'])) {
                 $slots[$i] |= 4;
             }
         }
-        // doOneDay(
-        //     $row['pc_catid'],
-        //     $thistime,
-        //     $row['pc_startTime'],
-        //     $row['pc_duration'],
-        //     $row['pc_prefcatid']
-        // );
+        // doOneDay($row['pc_catid'],$thistime,$row['pc_startTime'],$row['pc_duration'],$row['pc_prefcatid']);
     }
 
     //////
@@ -319,7 +296,13 @@ if (isset($_REQUEST['evdur'])) {
             $prov[$i] = $i;
         }
     }
-// }
+
+    /**
+     * Slots indexing by each doctor
+     * @author Daniel Jiménez
+     */
+    $slotsByProvider[$providerId] = $slots;
+}
 
 $ckavail = true;
 // If the requested date is a holiday/closed date we need to alert the user about it and let him choose if he wants to proceed
@@ -353,49 +336,37 @@ if (isset($_REQUEST['cktime'])) {
         }
     }
 }
-if (!empty($slots)) {
-    $lastdate = "";
-    $ampmFlag = "am"; // establish an AM-PM line break flag
-    for ($i = 0; $i < $slotcount; ++$i) {
-        $available = true;
-        for ($j = $i; $j < $i + $evslots; ++$j) {
-            if ($slots[$j] >= 4) {
-                $available = false;
+
+if (!empty($slotsByProvider)) {
+    foreach ($slotsByProvider as $providerId => $slots) {
+        for ($i = 0; $i < $slotcount; ++$i) {
+            $available = true;
+            for ($j = $i; $j < $i + $evslots; ++$j) {
+                if ($slots[$j] >= 4) {
+                    $available = false;
+                }
             }
+
+            if (!$available) {
+                continue; // skip reserved slots
+            }
+
+            $utime = ($slotbase + $i) * $slotsecs;
+            $thisdate = date("Y-m-d", $utime);
+            $adate = getdate($utime);
+            $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId] = $providerId;
+            // $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId][] = array(
+            //     'providerId' => $providerId,
+            //     'datetime' => date("Y-m-d H:i", $utime)
+
+            // );
+            // If the duration is more than 1 slot, increment $i appropriately.
+            // This is to avoid reporting available times on undesirable boundaries.
+            $i += $evslots - 1;
         }
-
-        if (!$available) {
-            continue; // skip reserved slots
-        }
-
-        $utime = ($slotbase + $i) * $slotsecs;
-        $thisdate = date("Y-m-d", $utime);
-        if ($thisdate != $lastdate) {
-            // if a new day, start a new row
-            if ($lastdate) { }
-
-            $lastdate = $thisdate;
-            $dayName = date("l", $utime);
-            // echo " <tr class='oneresult'>\n";
-            // echo "  <td class='srDate'>" . xlt($dayName) . "<br>" . text(oeFormatSDFT($utime)) . "</td>\n";
-            // echo "  <td class='srTimes'>";
-            // echo "<div id='am'>AM ";
-            $ampmFlag = "am";  // reset the AMPM flag
-
-            $result[$thisdate] = array();
-        }
-
-        $ampm = date('a', $utime);
-        $ampmFlag = $ampm;
-        $adate = getdate($utime);
-        // $result[$thisdate][date("Y-m-d H:i", $utime)] = array(
-        //     'datetime' => date("Y-m-d H:i", $utime),
-        //     'providerId' => $providers[$i],
-        //     'facilityId' => $facilities[$i],
-        // );
-        $result[$thisdate][] = date("Y-m-d H:i", $utime);
-        // If the duration is more than 1 slot, increment $i appropriately.
-        // This is to avoid reporting available times on undesirable boundaries.
-        $i += $evslots - 1;
+    }
+    foreach ($result as $date => $datetimes) {
+        ksort($datetimes);
+        $result[$date] = $datetimes;
     }
 }

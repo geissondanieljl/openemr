@@ -353,6 +353,12 @@ if (isset($_REQUEST['cktime'])) {
     }
 }
 
+$amCounters = 0;
+$pmCounters = 0;
+
+$amLimit = empty($_REQUEST['amLimit']) ? 50 : $_REQUEST['amLimit'];
+$pmLimit = empty($_REQUEST['pmLimit']) ? 50 : $_REQUEST['pmLimit'];
+
 if (!empty($slotsByProvider)) {
     foreach ($slotsByProvider as $providerId => $slots) {
         for ($i = 0; $i < $slotcount; ++$i) {
@@ -367,20 +373,33 @@ if (!empty($slotsByProvider)) {
                 continue; // skip reserved slots
             }
 
+            $ampm = date('a', $utime);
+            if ($ampm == 'am') {
+                $amCounters++;
+                if ($amCounters >= $amLimit) {
+                    break;
+                }
+            } else {
+                $pmCounters++;
+                if ($pmCounters >= $pmLimit) {
+                    break;
+                }
+            }
+
+            if ($amCounters >= $amLimit && $pmCounters >= $pmLimit) {
+                break;
+            }
+
             $utime = ($slotbase + $i) * $slotsecs;
             $thisdate = date("Y-m-d", $utime);
             $adate = getdate($utime);
             $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId] = $listFacilitiesId[$providerId];
-            // $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId][] = array(
-            //     'providerId' => $providerId,
-            //     'datetime' => date("Y-m-d H:i", $utime)
-
-            // );
             // If the duration is more than 1 slot, increment $i appropriately.
             // This is to avoid reporting available times on undesirable boundaries.
             $i += $evslots - 1;
         }
     }
+    ksort($result);
     foreach ($result as $date => $datetimes) {
         ksort($datetimes);
         $result[$date] = $datetimes;

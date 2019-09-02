@@ -154,4 +154,24 @@ class AppointmentService
         require $_SERVER['DOCUMENT_ROOT'] ."/interface/main/calendar/modules/get_calendar_api.php";
         return $result;
     }
+
+    public function getSpecialities($data)
+    {
+      $sql = "SELECT lo.option_id, lo.is_default, IF(LENGTH(ld.definition),ld.definition,lo.title) AS title 
+        FROM list_options AS lo 
+        LEFT JOIN lang_constants AS lc ON lc.constant_name = lo.title 
+        LEFT JOIN lang_definitions AS ld ON ld.cons_id = lc.cons_id  
+        AND ld.lang_id = '4'
+        WHERE lo.list_id = 'physician_type'  AND lo.activity=1";
+        $statementResults = sqlStatement($sql, $sqlBindArray);
+
+        $results = array();
+        while ($row = sqlFetchArray($statementResults)) {
+            $results[] = array(
+              'id' => $row['option_id'],
+              'name' => $row['title']
+            );
+        }
+        return $results;
+    }
 }

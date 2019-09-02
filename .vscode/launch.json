@@ -15,7 +15,7 @@
                 "**/vendor/**/*.php"
             ],
             "pathMappings": {
-                "/var/www/localhost/htdocs/openemr": "/home/daniel/Documentos/openemr"
+                "/var/www/localhost/htdocs/openemr": "/home/daniel/Documentos/dev/openemr"
             }
         },
         {

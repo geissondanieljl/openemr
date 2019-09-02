@@ -127,10 +127,16 @@ if (isset($_REQUEST['evdur'])) {
  * If we are looking for any provider we search all providers by facility or speciality (speciality in dev)
  * @author Daniel Jiménez
  */
+$provsId = array();
 $providerId = null;
 $listProvidersId = array();
 $listFacilitiesId = array();
 if (empty($_REQUEST['providerid'])) {
+
+    if (!empty($_REQUEST['specialityId'])) {
+        $provsId = getProvidersBySpeciality($_REQUEST['specialityId']);
+    }
+
     $sqlBindArray = array();
     $query = "SELECT pc_eventDate, pc_aid, pc_facility, pc_endDate, pc_startTime, pc_duration, " .
         "pc_recurrtype, pc_recurrspec, pc_alldayevent, pc_catid, pc_prefcatid " .
@@ -148,6 +154,10 @@ if (empty($_REQUEST['providerid'])) {
         $facility = $_REQUEST['facility'];
         $query .= " AND pc_facility = ?";
         array_push($sqlBindArray, $facility);
+    }
+
+    if(!empty($provsId)) {
+        $query .= " AND pc_aid IN(" . implode(',', $provsId) . ")";        
     }
 
     /**
@@ -353,6 +363,11 @@ if (isset($_REQUEST['cktime'])) {
     }
 }
 
+/**
+ * Counters init
+ * @author Daniel Jiménez
+ */
+
 $amCounters = 0;
 $pmCounters = 0;
 
@@ -399,6 +414,11 @@ if (!empty($slotsByProvider)) {
             $i += $evslots - 1;
         }
     }
+
+    /**
+     * Order results by date by datetime
+     * @author Daniel Jiménez
+     */
     ksort($result);
     foreach ($result as $date => $datetimes) {
         ksort($datetimes);

@@ -20,7 +20,7 @@ class AppointmentRestController
     private $appointmentService;
 
     public function __construct()
-    {
+    { 
         $this->appointmentService = new AppointmentService();
     }
 
@@ -63,7 +63,12 @@ class AppointmentRestController
     public function getCalendar($data)
     {
         $serviceResult = $this->appointmentService->getCalendar($data);
-        //$this->appointmentService->getCalendar($data);
+        return RestControllerHelper::responseHandler($serviceResult, null, 200);
+    }
+
+    public function getSpecialities($data)
+    {
+        $serviceResult = $this->appointmentService->getSpecialities($data);        
         return RestControllerHelper::responseHandler($serviceResult, null, 200);
     }
 }

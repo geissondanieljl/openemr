@@ -734,3 +734,17 @@ function recurrence_is_current($end_date)
 
     return false;
 }
+
+function getProvidersBySpeciality($specialityId)
+{
+    $query = "SELECT id FROM users WHERE physcian_type = ?";
+    $sqlBindArray = array();
+    array_push($sqlBindArray, $specialityId);
+    $res = sqlStatement($query, $sqlBindArray);
+    $result_data = array();
+    while ($row = sqlFetchArray($res)) {
+        $result_data[$row['id']] = $row['id'];
+        
+    }
+    return $result_data;
+}

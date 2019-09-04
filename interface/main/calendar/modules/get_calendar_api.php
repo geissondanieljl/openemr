@@ -133,8 +133,8 @@ $listProvidersId = array();
 $listFacilitiesId = array();
 if (empty($_REQUEST['providerid'])) {
 
-    if (!empty($_REQUEST['specialityId'])) {
-        $provsId = getProvidersBySpeciality($_REQUEST['specialityId']);
+    if (!empty($_REQUEST['specialityid'])) {
+        $provsId = getProvidersBySpeciality($_REQUEST['specialityid']);
     }
 
     $sqlBindArray = array();
@@ -184,14 +184,13 @@ if (empty($_REQUEST['providerid'])) {
 $slotsByProvider = array();
 $eventsListByProvider = array();
 
-// Note there is no need to sort the query results. => Change order is needed -DJ
+// Note there is no need to sort the query results. => Change, order is needed -DJ
 $query = "SELECT pc_eventDate, pc_eid, pc_aid, pc_facility, pc_endDate, pc_startTime, pc_duration, " .
     "pc_recurrtype, pc_recurrspec, pc_alldayevent, pc_catid, pc_prefcatid " .
     "FROM openemr_postcalendar_events " .
     "WHERE pc_eid != ? AND " .
     "((pc_endDate >= ? AND pc_eventDate < ? ) OR " .
     "(pc_endDate = '0000-00-00' AND pc_eventDate >= ? AND pc_eventDate < ?))";
-$query .= " ORDER BY pc_aid ";
 
 /**
  * $sqlBind reboot
@@ -206,7 +205,6 @@ array_push($sqlBindArray, $eid, $sdate, $edate, $sdate, $edate);
  */
 if ($providerId != null) {
     $query .= " AND pc_aid IN (" . implode(',', $listProvidersId) .  ") ";
-    array_push($sqlBindArray, $providerId);
 }
 
 // phyaura whimmel facility filtering
@@ -217,6 +215,7 @@ if (!empty($_REQUEST['facility']) && $_REQUEST['facility'] > 0) {
 }
 // end facility filtering whimmel 29apr08
 
+$query .= " ORDER BY pc_aid ";
 //////
 
 /**

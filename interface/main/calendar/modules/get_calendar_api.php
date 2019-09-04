@@ -202,7 +202,7 @@ array_push($sqlBindArray, $eid, $sdate, $edate, $sdate, $edate);
  * Change if we want search for any provider
  * @author Daniel Jiménez
  */
-if ($providerId != null) {
+if (count($listProvidersId) > 0) {
     $query .= " AND pc_aid IN (" . implode(',', $listProvidersId) .  ") ";
 }
 

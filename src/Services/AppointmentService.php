@@ -152,7 +152,30 @@ class AppointmentService
     public function getCalendar($data)
     {
         require $_SERVER['DOCUMENT_ROOT'] ."/interface/main/calendar/modules/get_calendar_api.php";
-        return $result;
+        $doctorsList = array();
+        $facilitiesList = array();        
+        $sql = "SELECT id, name, state, city, street FROM facility";
+        $statementResults = sqlStatement($sql);
+        while ($row = sqlFetchArray($statementResults)) {
+          $name = $row['name'];
+          $name .= ($row['state'] != '' ? " " . $row['state'] : '');
+          $name .= ($row['city'] != '' ? " " . $row['city'] . "," : '');
+          $name .= ($row['street'] != '' ? " " . $row['street'] . "." : '');
+          $facilitiesList[$row['id']] = $name;
+        }
+        if(count($listProvidersId) > 0) {
+          $sql = "SELECT id, fname, lname FROM users";
+          $sql .= " WHERE pc_aid IN (" . implode(',', $listProvidersId) .  ") ";
+          $statementResults = sqlStatement($sql);
+          while ($row = sqlFetchArray($statementResults)) {
+            $doctorsList[$row['id']] = $row['fname'] . ' ' . $row['lname'];
+          }
+        }
+        return array(
+          'slots' => $result,
+          'doctorsName' => $doctorsList,
+          'FacilitiesName' => $facilitiesList
+        );
     }
 
     public function getSpecialities($data)

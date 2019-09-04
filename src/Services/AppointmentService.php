@@ -176,8 +176,8 @@ class AppointmentService
     }
     return array(
       'slots' => $result,
-      'doctorsList' => $doctorsList,
-      'facilitiesList' => $facilitiesList
+      'doctorNames' => $doctorsList,
+      'facilityNames' => $facilitiesList
     );
   }
 

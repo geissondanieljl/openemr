@@ -169,7 +169,6 @@ if (empty($_REQUEST['providerid'])) {
     $doctorsList = fetchEvents($sdate, $edate, null, null, false, 0, $sqlBindArray, $query);
     foreach ($doctorsList as $row) {
         $listProvidersId[$row['pc_aid']] = $row['pc_aid'];
-        $listFacilitiesId[$row['pc_aid']] = $row['pc_facility'];
     }
 } else {
     $providerId = $_REQUEST['providerid'];
@@ -225,6 +224,7 @@ $query .= " ORDER BY pc_aid ";
 $events2 = fetchEvents($sdate, $edate, null, null, false, 0, $sqlBindArray, $query);
 foreach ($events2 as $row) {
     $eventsListByProvider[$row['pc_aid']][$row['pc_eid']] = $row;
+    $listFacilitiesId[$row['pc_aid']] = $row['pc_facility'];
 }
 
 

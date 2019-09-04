@@ -156,8 +156,8 @@ if (empty($_REQUEST['providerid'])) {
         array_push($sqlBindArray, $facility);
     }
 
-    if(!empty($provsId)) {
-        $query .= " AND pc_aid IN(" . implode(',', $provsId) . ")";        
+    if (!empty($provsId)) {
+        $query .= " AND pc_aid IN(" . implode(',', $provsId) . ")";
     }
 
     /**

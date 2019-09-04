@@ -387,21 +387,21 @@ if (!empty($slotsByProvider)) {
                 continue; // skip reserved slots
             }
 
+            if ($amCounters >= $amLimit && $pmCounters >= $pmLimit) {
+                break;
+            }
+
             $ampm = date('a', $utime);
             if ($ampm == 'am') {
-                $amCounters++;
                 if ($amCounters >= $amLimit) {
                     break;
                 }
+                $amCounters++;
             } else {
-                $pmCounters++;
                 if ($pmCounters >= $pmLimit) {
                     break;
                 }
-            }
-
-            if ($amCounters >= $amLimit && $pmCounters >= $pmLimit) {
-                break;
+                $pmCounters++;
             }
 
             $utime = ($slotbase + $i) * $slotsecs;

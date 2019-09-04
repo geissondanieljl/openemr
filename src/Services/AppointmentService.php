@@ -160,10 +160,9 @@ class AppointmentService
     }
     $statementResults = sqlStatement($sql);
     while ($row = sqlFetchArray($statementResults)) {
-      $name = $row['name'];
-      $name .= ($row['street'] != '' ? " la " . $row['street'] : '');
-      $name .= ($row['city'] != '' ? " de la ciudad de " . $row['city'] . "," : '');
-      $name .= ($row['state'] != '' ? " " . $row['state'] . "." : '');
+      $name = $row['name'] . " ubicado en ";
+      $name .= ($row['street'] != '' ? " " . $row['street'] : '');
+      $name .= ($row['city'] != '' ? " de " . $row['city'] . "." : '');
       $facilitiesList[$row['id']] = $name;
     }
     if (count($listProvidersId) > 0) {

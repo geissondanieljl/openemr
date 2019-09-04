@@ -155,6 +155,9 @@ class AppointmentService
         $doctorsList = array();
         $facilitiesList = array();        
         $sql = "SELECT id, name, state, city, street FROM facility";
+        if(count($listFacilitiesId) > 0) {
+          $sql .= " WHERE id IN (" . implode(',', $listFacilitiesId) .  ") ";
+        }
         $statementResults = sqlStatement($sql);
         while ($row = sqlFetchArray($statementResults)) {
           $name = $row['name'];

@@ -165,7 +165,7 @@ class AppointmentService
         }
         if(count($listProvidersId) > 0) {
           $sql = "SELECT id, fname, lname FROM users";
-          $sql .= " WHERE pc_aid IN (" . implode(',', $listProvidersId) .  ") ";
+          $sql .= " WHERE id IN (" . implode(',', $listProvidersId) .  ") ";
           $statementResults = sqlStatement($sql);
           while ($row = sqlFetchArray($statementResults)) {
             $doctorsList[$row['id']] = $row['fname'] . ' ' . $row['lname'];

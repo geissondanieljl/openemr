@@ -113,7 +113,7 @@ class AppointmentService
     $sql .= "     pc_catid=?,";
     $sql .= "     pc_title=?,";
     $sql .= "     pc_duration=?,";
-    $sql .= "     pc_hometext=?,";
+    // $sql .= "     pc_hometext=?,";
     $sql .= "     pc_eventDate=?,";
     $sql .= "     pc_apptstatus=?,";
     $sql .= "     pc_startTime=?,";
@@ -122,7 +122,8 @@ class AppointmentService
     $sql .= "     pc_billing_location=?,";
     $sql .= "     pc_informant=1,";
     $sql .= "     pc_eventstatus=1,";
-    $sql .= "     pc_sharing=1";
+    $sql .= "     pc_sharing=1,";
+    $sql .= "     pc_aid=?";
 
     $results = sqlInsert(
       $sql,
@@ -131,13 +132,15 @@ class AppointmentService
         $data["pc_catid"],
         $data["pc_title"],
         $data["pc_duration"],
-        $data["pc_hometext"],
+        // $data["pc_hometext"],
         $data["pc_eventDate"],
         $data['pc_apptstatus'],
         $startTime,
         $endTime,
         $data["pc_facility"],
-        $data["pc_billing_location"]
+        // $data["pc_billing_location"],
+        $data["pc_facility"],
+        $data["pc_aid"]
       )
     );
 

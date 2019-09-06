@@ -743,7 +743,7 @@ function recurrence_is_current($end_date)
 function getProvidersBySpeciality($specialityId)
 {
     $result_data = array();
-    $query = "SELECT id FROM users WHERE physcian_type = ?";
+    $query = "SELECT id FROM users WHERE physician_type = ?";
     $res = sqlStatement($query, $specialityId);
     while ($row = sqlFetchArray($res)) {
         $result_data[$row['id']] = $row['id'];

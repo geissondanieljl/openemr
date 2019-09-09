@@ -34,7 +34,7 @@ class ProviderService
                 FROM  users
                 WHERE authorized = 1 AND active = 1";
         if (!empty($data['npi'])) {
-            $sql .= "AND npi = ?";
+            $sql .= " AND npi = ?";
             array_push($sqlBindArray, $data['npi']);
          }
         $statementResults = sqlStatement($sql, $sqlBindArray);

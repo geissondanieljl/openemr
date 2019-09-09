@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ProviderService
  *
@@ -15,24 +16,28 @@ namespace OpenEMR\Services;
 class ProviderService
 {
 
-  /**
-   * Default constructor.
-   */
+    /**
+     * Default constructor.
+     */
     public function __construct()
-    {
-    }
+    { }
 
-    public function getAll()
+    public function getAll($data)
     {
+        $sqlBindArray = array();
         $sql = "SELECT id,
                        fname,
                        lname,
                        mname,
-                       username
+                       username,
+                       npi
                 FROM  users
                 WHERE authorized = 1 AND active = 1";
-
-        $statementResults = sqlStatement($sql);
+        if (!empty($data['npi'])) {
+            $sql .= "AND npi = ?";
+            array_push($sqlBindArray, $data['npi']);
+         }
+        $statementResults = sqlStatement($sql, $sqlBindArray);
 
         $results = array();
         while ($row = sqlFetchArray($statementResults)) {

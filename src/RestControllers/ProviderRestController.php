@@ -30,9 +30,9 @@ class ProviderRestController
         return RestControllerHelper::responseHandler($serviceResult, null, 200);
     }
 
-    public function getAll()
+    public function getAll($data)
     {
-        $serviceResult = $this->providerService->getAll();
+        $serviceResult = $this->providerService->getAll($data);
         return RestControllerHelper::responseHandler($serviceResult, null, 200);
     }
 }

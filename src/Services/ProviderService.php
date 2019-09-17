@@ -80,7 +80,8 @@ class ProviderService
                         ON ope.pc_pid = pd.pid 
                 WHERE ope.pc_aid = ?
                     AND ope.pc_startTime >= ? 
-                    AND ope.pc_endTime <= ? ";
+                    AND ope.pc_endTime <= ?
+                    AND ope.pc_apptstatus = 'AVM' ";
 
         return sqlQuery($sql, array($id, $startTime, $endTime));
     }

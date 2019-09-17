@@ -108,7 +108,7 @@ class AppointmentService
     require_once($_SERVER['DOCUMENT_ROOT'] . "/interface/globals.php");
     $duration = (empty($data['pc_duration']) ? $GLOBALS['calendar_interval'] * 60 : $data['pc_duration'] / 60);
     $startTime = date("H:i:s", strtotime($data['pc_startTime']));
-    $endTime = date("H:i:s", strtotime("+{$duration} minutes", $startTime));
+    $endTime = date("H:i:s", strtotime("+{$duration} minutes", strtotime($data['pc_startTime'])));
 
     $sql  = " INSERT INTO openemr_postcalendar_events SET";
     $sql .= "     pc_pid=?,"; 

@@ -63,9 +63,9 @@ class ProviderService
     public function getAppointments($data)
     {
         $id = $data['providerid'];
-        $endTime = date("H:i:s", $data['endtime']);
-        $startTime = date("H:i:s", $data['starttime']);
-        $eventDate = date('Y-m-d', $data['starttime']);
+        $endTime = date("H:i:s", strtotime($data['endtime']));
+        $startTime = date("H:i:s", strtotime($data['starttime']));
+        $eventDate = date('Y-m-d', strtotime($data['starttime']));
         $sql = "SELECT
                     ope.pc_eid,
                     ope.pc_catid,
@@ -85,6 +85,12 @@ class ProviderService
                     AND ope.pc_endTime <= ?
                     AND ope.pc_apptstatus = 'AVM' ";
 
-        return sqlQuery($sql, array($id, $eventDate, $startTime, $endTime));
+        $statementResults = sqlStatement($sql, array($id, $eventDate, $startTime, $endTime));
+        $results = array();
+        while ($row = sqlFetchArray($statementResults)) {
+            array_push($results, $row);
+        }
+
+        return $results;
     }
 }

@@ -36,7 +36,7 @@ class ProviderService
         if (!empty($data['npi'])) {
             $sql .= " AND npi = ?";
             array_push($sqlBindArray, $data['npi']);
-         }
+        }
         $statementResults = sqlStatement($sql, $sqlBindArray);
 
         $results = array();
@@ -58,5 +58,30 @@ class ProviderService
                 WHERE authorized = 1 AND active = 1 AND id = ?";
 
         return sqlQuery($sql, $id);
+    }
+
+    public function getAppointments($data)
+    {
+        $id = $data['providerid'];
+        $endTime = $data['endtime'];
+        $startTime = $data['starttime'];
+        $sql = "SELECT
+                    ope.pc_eid,
+                    ope.pc_catid,
+                    ope.pc_aid,
+                    ope.pc_pid,
+                    ope.pc_eventDate,
+                    ope.pc_startTime,
+                    ope.pc_endTime,
+                    pd.fname,
+                    pd.lname
+                FROM openemr_postcalendar_events ope
+                    JOIN patient_data pd 
+                        ON ope.pc_pid = pd.pid 
+                WHERE ope.pc_aid = ?
+                    AND ope.pc_startTime >= ? 
+                    AND ope.pc_endTime <= ? ";
+
+        return sqlQuery($sql, array($id, $startTime, $endTime));
     }
 }

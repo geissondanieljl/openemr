@@ -35,4 +35,10 @@ class ProviderRestController
         $serviceResult = $this->providerService->getAll($data);
         return RestControllerHelper::responseHandler($serviceResult, null, 200);
     }
+
+    public function getAppointments($data)
+    {
+        $serviceResult = $this->providerService->getAppointments($data);
+        return RestControllerHelper::responseHandler($serviceResult, null, 200);
+    }
 }

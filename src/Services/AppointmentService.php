@@ -105,11 +105,13 @@ class AppointmentService
 
   public function insert($pid, $data)
   {
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/interface/globals.php");
+    $duration = (empty($data['pc_duration']) ? $GLOBALS['calendar_interval'] * 60 : $data['pc_duration']);
     $startTime = date("H:i:s", strtotime($data['pc_startTime']));
-    $endTime = $startTime + $data['pc_duration'];
+    $endTime = $startTime + date("H:i:s", strtotime($duration));
 
     $sql  = " INSERT INTO openemr_postcalendar_events SET";
-    $sql .= "     pc_pid=?,";
+    $sql .= "     pc_pid=?,"; 
     $sql .= "     pc_catid=?,";
     $sql .= "     pc_title=?,";
     $sql .= "     pc_duration=?,";
@@ -123,7 +125,8 @@ class AppointmentService
     $sql .= "     pc_informant=1,";
     $sql .= "     pc_eventstatus=1,";
     $sql .= "     pc_sharing=1,";
-    $sql .= "     pc_aid=?";
+    $sql .= "     pc_aid=?,";
+    $sql .= "     pc_time=?";
 
     $results = sqlInsert(
       $sql,
@@ -140,7 +143,8 @@ class AppointmentService
         $data["pc_facility"],
         // $data["pc_billing_location"],
         $data["pc_facility"],
-        $data["pc_aid"]
+        $data["pc_aid"],
+        date('Y-m-d h:i:s')
       )
     );
 

@@ -13,18 +13,20 @@
  * The content of doOneDay function has been move to events loop for a global variables issue (Line 220)
  * Returns: 
  * $result = [
- *      'date' => [
- *         'datetime',
- *         'datetime',
- *         'datetime',
+ *      "slots" => [
+ *          "date" => [
+ *              "2019-09-18 10:15": [
+ *                   "5": "4"
+ *              ],
+ *          ]
+ *      ],
+ *      "doctorNames"=> [
+ *          "5": "Mateo Mendoza"
+ *      ],
+ *      "facilityNames"=> [
+ *          "4": "Centro 2 ubicado en  Carrera 27 de Bogotá."
  *      ]
- *      'date' => [
- *         'datetime',
- *         'datetime',
- *         'datetime',
- *      ]
- * ]
- * 
+ * ] 
  */
 
 /**

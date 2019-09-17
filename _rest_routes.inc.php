@@ -331,6 +331,9 @@ RestConfig::$ROUTE_MAP = array(
     "GET /api/speciality" => function () {
         return (new AppointmentRestController())->getSpecialities($_GET);
     },
+    "GET /api/provider/appointments" => function () {
+        return (new ProviderRestController())->getAppointments($_GET);
+    },
 
 );
 

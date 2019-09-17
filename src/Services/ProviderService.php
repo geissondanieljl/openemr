@@ -63,8 +63,9 @@ class ProviderService
     public function getAppointments($data)
     {
         $id = $data['providerid'];
-        $endTime = $data['endtime'];
-        $startTime = $data['starttime'];
+        $endTime = date("H:i:s", $data['endtime']);
+        $startTime = date("H:i:s", $data['starttime']);
+        $eventDate = date('Y-m-d', $data['starttime']);
         $sql = "SELECT
                     ope.pc_eid,
                     ope.pc_catid,
@@ -79,10 +80,11 @@ class ProviderService
                     JOIN patient_data pd 
                         ON ope.pc_pid = pd.pid 
                 WHERE ope.pc_aid = ?
+                    AND ope.pc_eventDate = ?
                     AND ope.pc_startTime >= ? 
                     AND ope.pc_endTime <= ?
                     AND ope.pc_apptstatus = 'AVM' ";
 
-        return sqlQuery($sql, array($id, $startTime, $endTime));
+        return sqlQuery($sql, array($id, $eventDate, $startTime, $endTime));
     }
 }

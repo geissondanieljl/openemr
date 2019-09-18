@@ -91,6 +91,6 @@ class ProviderService
             array_push($results, $row);
         }
 
-        return $results;
+        return array('appointments' => $results);
     }
 }

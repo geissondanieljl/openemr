@@ -66,6 +66,7 @@ class ProviderService
         $endTime = date("H:i:s", strtotime($data['endtime']));
         $startTime = date("H:i:s", strtotime($data['starttime']));
         $eventDate = date('Y-m-d', strtotime($data['starttime']));
+        $idAppt = empty($data['idappt']) ? null : $data['idappt'];
         $sql = "SELECT
                     ope.pc_eid,
                     ope.pc_catid,
@@ -85,8 +86,12 @@ class ProviderService
                     AND ope.pc_startTime >= ? 
                     AND ope.pc_endTime <= ?
                     AND ope.pc_apptstatus = 'AVM' ";
-
-        $statementResults = sqlStatement($sql, array($id, $eventDate, $startTime, $endTime));
+        $arrayParams = array($id, $eventDate, $startTime, $endTime);
+        if ($idAppt != null) {
+            $sql .= " AND ope.pc_eid = ? ";
+            array_push($arrayParams, $idAppt);
+        }
+        $statementResults = sqlStatement($sql, $arrayParams);
         $results = array();
         while ($row = sqlFetchArray($statementResults)) {
             array_push($results, $row);

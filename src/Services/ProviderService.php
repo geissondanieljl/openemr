@@ -74,6 +74,7 @@ class ProviderService
                     ope.pc_eventDate,
                     ope.pc_startTime,
                     ope.pc_endTime,
+                    ope.pc_facility,
                     pd.fname,
                     pd.lname
                 FROM openemr_postcalendar_events ope

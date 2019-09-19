@@ -96,6 +96,7 @@ class ProviderService
             $sql .= " AND ope.pc_eid = ? ";
             array_push($arrayParams, $idAppt);
         }
+        $sql .= " ORDER BY ope.pc_eventDate, ope.pc_startTime ";
         $statementResults = sqlStatement($sql, $arrayParams);
         $results = array();
         while ($row = sqlFetchArray($statementResults)) {

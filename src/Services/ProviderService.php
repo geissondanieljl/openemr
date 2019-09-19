@@ -76,11 +76,16 @@ class ProviderService
                     ope.pc_startTime,
                     ope.pc_endTime,
                     ope.pc_facility,
-                    pd.fname,
-                    pd.lname
+                    CONCAT(pd.fname, ' ', pd.lname) AS pname,
+                    CONCAT(usr.fname, ' ', usr.lname) AS dname,
+                    fa.facility AS facilityname
                 FROM openemr_postcalendar_events ope
                     JOIN patient_data pd 
                         ON ope.pc_pid = pd.pid 
+                    JOIN users usr 
+                        ON ope.pc_aid = usr.id 
+                    LEFT JOIN facility fa 
+                        ON ope.pc_facility = fa.id 
                 WHERE ope.pc_aid = ?
                     AND ope.pc_eventDate = ?
                     AND ope.pc_startTime >= ? 

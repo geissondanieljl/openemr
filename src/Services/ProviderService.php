@@ -78,7 +78,7 @@ class ProviderService
                     ope.pc_facility,
                     CONCAT(pd.fname, ' ', pd.lname) AS pname,
                     CONCAT(usr.fname, ' ', usr.lname) AS dname,
-                    fa.facility AS facilityname
+                    fa.name AS facilityname
                 FROM openemr_postcalendar_events ope
                     JOIN patient_data pd 
                         ON ope.pc_pid = pd.pid 

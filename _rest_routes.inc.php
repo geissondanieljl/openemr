@@ -63,13 +63,13 @@ RestConfig::$ROUTE_MAP = array(
         RestConfig::authorization_check("admin", "users");
         return (new ProviderRestController())->getAll($_GET);
     },
-    "GET /api/provider/appointments" => function () {
-        RestConfig::authorization_check("admin", "users");
-        return (new ProviderRestController())->getAppointments($_GET);
-    },
     "GET /api/provider/:prid" => function ($prid) {
         RestConfig::authorization_check("admin", "users");
         return (new ProviderRestController())->getOne($prid);
+    },
+    "GET /api/provider/:prid/appointments" => function ($prid) {
+        RestConfig::authorization_check("admin", "users");
+        return (new ProviderRestController())->getAppointments($_GET);
     },
     "GET /api/patient" => function () {
         RestConfig::authorization_check("patients", "demo");

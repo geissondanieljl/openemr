@@ -91,7 +91,6 @@ class ProviderService
             $sql .= " AND ope.pc_eid = ? ";
             array_push($arrayParams, $idAppt);
         }
-        return $this->getAll($data);
         $statementResults = sqlStatement($sql, $arrayParams);
         $results = array();
         while ($row = sqlFetchArray($statementResults)) {

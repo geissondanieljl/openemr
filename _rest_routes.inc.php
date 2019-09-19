@@ -61,8 +61,11 @@ RestConfig::$ROUTE_MAP = array(
     },
     "GET /api/provider" => function () {
         RestConfig::authorization_check("admin", "users");
+        return (new ProviderRestController())->getAll($_GET);
+    },
+    "GET /api/provider/appointments" => function () {
+        RestConfig::authorization_check("admin", "users");
         return (new ProviderRestController())->getAppointments($_GET);
-        // return (new ProviderRestController())->getAll($_GET);
     },
     "GET /api/provider/:prid" => function ($prid) {
         RestConfig::authorization_check("admin", "users");
@@ -332,10 +335,6 @@ RestConfig::$ROUTE_MAP = array(
     "GET /api/speciality" => function () {
         return (new AppointmentRestController())->getSpecialities($_GET);
     },
-    "GET /api/provider/appointments" => function () {
-        return (new ProviderRestController())->getAppointments($_GET);
-    },
-
 );
 
 use OpenEMR\RestControllers\FhirPatientRestController;

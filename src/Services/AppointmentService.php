@@ -226,14 +226,14 @@ class AppointmentService
       foreach ($reSchAppt as $key => $idAppt) {
         $index = 'fail';
         if (array_key_exists($key, $apptList)) {
-          $eDate = date('Y-m-d', $apptList[$key]);
-          $sTime = date('H:i:s', $apptList[$key]);
+          $eDate = date('Y-m-d', strtotime($apptList[$key]));
+          $sTime = date('H:i:s', strtotime($apptList[$key]));
           $eTime = date("H:i:s", strtotime("+{$slotsecs} secs", strtotime($apptList[$key])));
           $sql = "UPDATE openemr_postcalendar_events SET pc_eventDate = '{$eDate}', pc_startTime = '{$sTime}', pc_endTime = '{$eTime}' WHERE pc_eid = '{$idAppt}'";
           $index = 'successful';
           sqlStatement($sql);
         }
-        $rSchedule[$index][] = $eDate;
+        $rSchedule[$index][] = $idAppt;
       }
     }
     return $rSchedule;

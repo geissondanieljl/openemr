@@ -211,6 +211,7 @@ class AppointmentService
   {
     require $_SERVER['DOCUMENT_ROOT'] . "/interface/main/calendar/modules/get_calendar_api.php";
     $reSchAppt = empty($data['apptlist']) ? '' : $data['apptlist'];
+    return  $data;
     $reSchAppt = explode(',', $reSchAppt);
     $apptList = array();
     $rSchedule = array(
@@ -223,7 +224,6 @@ class AppointmentService
           $apptList[] = $arrk;
         }
       }
-      return  $data;
       foreach ($reSchAppt as $key => $idAppt) {
         $index = 'fail';
         if (array_key_exists($key, $apptList)) {

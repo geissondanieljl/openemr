@@ -223,6 +223,7 @@ class AppointmentService
           $apptList[] = $arrk;
         }
       }
+      return  $apptList;
       foreach ($reSchAppt as $key => $idAppt) {
         $index = 'fail';
         if (array_key_exists($key, $apptList)) {

@@ -210,9 +210,8 @@ class AppointmentService
   public function setReSchedule($data)
   {
     require $_SERVER['DOCUMENT_ROOT'] . "/interface/main/calendar/modules/get_calendar_api.php";
-    $reSchAppt = (empty($data['apptlist']) ? '' : $data['apptlist']);
-    return  array(1,2,3);
-    return  array(1);
+    $reSchAppt = $data['apptlist'];
+    return $reSchAppt;
     $reSchAppt = explode(',', $reSchAppt);
     $apptList = array();
     $rSchedule = array(

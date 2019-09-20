@@ -111,7 +111,7 @@ class AppointmentService
     $endTime = date("H:i:s", strtotime("+{$duration} minutes", strtotime($data['pc_startTime'])));
 
     $sql  = " INSERT INTO openemr_postcalendar_events SET";
-    $sql .= "     pc_pid=?,"; 
+    $sql .= "     pc_pid=?,";
     $sql .= "     pc_catid=?,";
     $sql .= "     pc_title=?,";
     $sql .= "     pc_duration=?,";
@@ -205,5 +205,10 @@ class AppointmentService
       );
     }
     return $results;
+  }
+
+  public function setReSechedule($data)
+  {
+    require $_SERVER['DOCUMENT_ROOT'] . "/interface/main/calendar/modules/get_calendar_api.php";
   }
 }

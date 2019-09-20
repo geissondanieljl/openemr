@@ -371,9 +371,12 @@ if (isset($_REQUEST['cktime'])) {
 
 $amCounters = 0;
 $pmCounters = 0;
+$generalCounter = 0;
 
-$amLimit = empty($_REQUEST['amLimit']) ? 50 : $_REQUEST['amLimit'];
-$pmLimit = empty($_REQUEST['pmLimit']) ? 50 : $_REQUEST['pmLimit'];
+$amLimit = empty($_REQUEST['amLimit']) ? 100 : $_REQUEST['amLimit'];
+$pmLimit = empty($_REQUEST['pmLimit']) ? 100 : $_REQUEST['pmLimit'];
+$startdatetime = empty($_REQUEST['startdatetime']) ? strtotime("$sdate 00:00:00") : strtotime($_REQUEST['startdatetime']);
+$rschQuantity = empty($_REQUEST['rschquantity']) ? 0 : $_REQUEST['rschquantity'];
 
 if (!empty($slotsByProvider)) {
     foreach ($slotsByProvider as $providerId => $slots) {
@@ -389,23 +392,35 @@ if (!empty($slotsByProvider)) {
                 continue; // skip reserved slots
             }
 
-            if ($amCounters >= $amLimit && $pmCounters >= $pmLimit) {
+            // If we are looking for reSchedule
+            if ($rschQuantity > 0) {
+                // If we got all the required slots break;
+                if ($generalCounter > $rschQuantity) {
+                    break;
+                }
+                // If the datetime is less than the start datetime
+                if ($startdatetime > strtotime($utime)) {
+                    continue;
+                }
+                // If we are looking just for avaliable appts
+            } else if ($amCounters >= $amLimit && $pmCounters >= $pmLimit) {
                 break;
             }
 
             $ampm = date('a', $utime);
             if ($ampm == 'am') {
                 if ($amCounters >= $amLimit) {
-                    break;
+                    continue;
                 }
                 $amCounters++;
             } else {
                 if ($pmCounters >= $pmLimit) {
-                    break;
+                    continue;
                 }
                 $pmCounters++;
             }
 
+            $generalCounter++;
             $utime = ($slotbase + $i) * $slotsecs;
             $thisdate = date("Y-m-d", $utime);
             $adate = getdate($utime);

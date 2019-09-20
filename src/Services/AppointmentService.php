@@ -233,7 +233,7 @@ class AppointmentService
           $index = 'successful';
           sqlStatement($sql);
         }
-        $rSchedule[$index][] = $idAppt;
+        $rSchedule[$index][] = $eDate;
       }
     }
     return $rSchedule;

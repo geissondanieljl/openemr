@@ -375,8 +375,8 @@ $generalCounter = 0;
 
 $amLimit = empty($_REQUEST['amLimit']) ? 100 : $_REQUEST['amLimit'];
 $pmLimit = empty($_REQUEST['pmLimit']) ? 100 : $_REQUEST['pmLimit'];
-$startdatetime = empty($_REQUEST['startdatetime']) ? strtotime("$sdate 00:00:00") : strtotime($_REQUEST['startdatetime']);
 $rschQuantity = empty($_REQUEST['rschquantity']) ? 0 : $_REQUEST['rschquantity'];
+$startdatetime = empty($_REQUEST['startdatetime']) ? "$sdate 00:00:00" : $_REQUEST['startdatetime'];
 
 if (!empty($slotsByProvider)) {
     foreach ($slotsByProvider as $providerId => $slots) {
@@ -392,14 +392,18 @@ if (!empty($slotsByProvider)) {
                 continue; // skip reserved slots
             }
 
+            $utime = ($slotbase + $i) * $slotsecs;
+            $thisdate = date("Y-m-d", $utime);
+            $thisdatetime = date("Y-m-d H:i:s", $utime);
+
             // If we are looking for reSchedule
             if ($rschQuantity > 0) {
                 // If we got all the required slots break;
-                if ($generalCounter > $rschQuantity) {
+                if ($generalCounter >= $rschQuantity) {
                     break;
                 }
                 // If the datetime is less than the start datetime
-                if ($startdatetime > strtotime($utime)) {
+                if (strtotime($startdatetime) >= strtotime($thisdatetime)) {
                     continue;
                 }
                 // If we are looking just for avaliable appts
@@ -421,8 +425,6 @@ if (!empty($slotsByProvider)) {
             }
 
             $generalCounter++;
-            $utime = ($slotbase + $i) * $slotsecs;
-            $thisdate = date("Y-m-d", $utime);
             $adate = getdate($utime);
             $result[$thisdate][date("Y-m-d H:i", $utime)][$providerId] = $listFacilitiesId[$providerId];
             // If the duration is more than 1 slot, increment $i appropriately.

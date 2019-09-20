@@ -207,8 +207,34 @@ class AppointmentService
     return $results;
   }
 
-  public function setReSechedule($data)
+  public function setReSchedule($data)
   {
     require $_SERVER['DOCUMENT_ROOT'] . "/interface/main/calendar/modules/get_calendar_api.php";
+    $reSchAppt = empty($data['reSchAppy']) ? array() : $data['reSchAppy'];
+    $apptList = array();
+    $rSchedule = array(
+      'successful' => array(),
+      'fail' => array(),
+    );
+    if (count($reSchAppt) > 0) {
+      foreach ($result as $date => $datetimes) {
+        foreach (array_keys($datetimes) as $arrk) {
+          $apptList[] = $arrk;
+        }
+      }
+      foreach ($reSchAppt as $key => $idAppt) {
+        $index = 'fail';
+        if (array_key_exists($key, $apptList)) {
+          $eDate = date('Y-m-d', $apptList[$key]);
+          $sTime = date('H:i:s', $apptList[$key]);
+          $eTime = date("H:i:s", strtotime("+{$slotsecs} secs", strtotime($apptList[$key])));
+          $sql = "UPDATE openemr_postcalendar_events SET pc_eventDate = '{$eDate}', pc_startTime = '{$sTime}', pc_endTime = '{$eTime}' WHERE pc_eid = '{$idAppt}'";
+          $index = 'successful';
+          sqlStatement($sql);
+        }
+        $rSchedule[$index][] = $idAppt;
+      }
+    }
+    return $rSchedule;
   }
 }

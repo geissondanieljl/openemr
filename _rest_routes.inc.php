@@ -71,6 +71,10 @@ RestConfig::$ROUTE_MAP = array(
         RestConfig::authorization_check("admin", "users");
         return (new ProviderRestController())->getAppointments($_GET);
     },
+    "POST /api/provider/:prid/reschedule-appointments" => function ($prid) {
+        RestConfig::authorization_check("admin", "users");
+        return (new AppointmentRestController())->setReSchedule($_POST);
+    },
     "GET /api/patient" => function () {
         RestConfig::authorization_check("patients", "demo");
         return (new PatientRestController(null))->getAll($_GET);

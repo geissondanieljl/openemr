@@ -71,4 +71,10 @@ class AppointmentRestController
         $serviceResult = $this->appointmentService->getSpecialities($data);        
         return RestControllerHelper::responseHandler($serviceResult, null, 200);
     }
+
+    public function setReSchedule($data)
+    {
+        $serviceResult = $this->appointmentService->setReSchedule($data);        
+        return RestControllerHelper::responseHandler($serviceResult, null, 200);
+    }
 }

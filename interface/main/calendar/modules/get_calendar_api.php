@@ -403,7 +403,7 @@ if (!empty($slotsByProvider)) {
                     break;
                 }
                 // If the datetime is less than the start datetime
-                if (strtotime($startdatetime) >= strtotime($thisdatetime)) {
+                if (strtotime($startdatetime) > strtotime($thisdatetime)) {
                     continue;
                 }
                 // If we are looking just for avaliable appts

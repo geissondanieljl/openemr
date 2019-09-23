@@ -88,8 +88,8 @@ class ProviderService
                         ON ope.pc_facility = fa.id 
                 WHERE ope.pc_aid = ?
                     AND ope.pc_eventDate = ?
-                    AND ope.pc_startTime >= ? 
-                    AND ope.pc_endTime <= ?
+                    AND TIME(ope.pc_startTime) >= TIME(?)
+                    AND TIME(ope.pc_endTime) <= TIME(?)
                     AND ope.pc_apptstatus = 'AVM' ";
         $arrayParams = array($id, $eventDate, $startTime, $endTime);
         if ($idAppt != null) {

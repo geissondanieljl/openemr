@@ -211,9 +211,10 @@ class AppointmentService
   {
     require $_SERVER['DOCUMENT_ROOT'] . "/interface/main/calendar/modules/get_calendar_api.php";
     return array(
-      $providerId,
-      $listProvidersId,
-      $eventsListByProvider
+      'amLimit' => $amLimit,
+      'pmLimit' => $pmLimit,
+      'rschQuantity' =>$rschQuantity,
+      'startdatetime' => startdatetime
     );
     $reSchAppt = $data['apptlist'];
     $reSchAppt = explode(',', $reSchAppt);

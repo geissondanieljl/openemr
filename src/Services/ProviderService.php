@@ -63,7 +63,6 @@ class ProviderService
     public function getAppointments($data)
     {
         $id = $data['providerid'];
-        $endTime = date("H:i:s", strtotime($data['endtime']));
         $startTime = date("H:i:s", strtotime($data['starttime']));
         $eventDate = date('Y-m-d', strtotime($data['starttime']));
         $idAppt = empty($data['idappt']) ? null : $data['idappt'];
@@ -88,10 +87,17 @@ class ProviderService
                         ON ope.pc_facility = fa.id 
                 WHERE ope.pc_aid = ?
                     AND ope.pc_eventDate = ?
-                    AND TIME(ope.pc_startTime) >= TIME(?)
-                    AND TIME(ope.pc_endTime) <= TIME(?)
                     AND ope.pc_apptstatus = 'AVM' ";
-        $arrayParams = array($id, $eventDate, $startTime, $endTime);
+        $arrayParams = array($id, $eventDate);
+        if (array_key_exists('endtime', $data)) {
+            $sql .= " AND TIME(ope.pc_startTime) >= TIME(?) AND TIME(ope.pc_endTime) <= TIME(?) ";
+            $endTime = date("H:i:s", strtotime($data['endtime']));
+            array_push($arrayParams, $startTime);
+            array_push($arrayParams, $endTime);
+        } else {
+            $sql .= " AND TIME(ope.pc_startTime) = TIME(?) ";
+            array_push($arrayParams, $startTime);
+        }
         if ($idAppt != null) {
             $sql .= " AND ope.pc_eid = ? ";
             array_push($arrayParams, $idAppt);

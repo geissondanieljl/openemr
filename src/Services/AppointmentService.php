@@ -210,6 +210,11 @@ class AppointmentService
   public function setReSchedule($data)
   {
     require $_SERVER['DOCUMENT_ROOT'] . "/interface/main/calendar/modules/get_calendar_api.php";
+    return array(
+      $providerId,
+      $listProvidersId,
+      $eventsListByProvider
+    );
     $reSchAppt = $data['apptlist'];
     $reSchAppt = explode(',', $reSchAppt);
     $apptList = array();
@@ -217,8 +222,7 @@ class AppointmentService
       'successful' => array(),
       'fail' => array(),
     );
-    if (count($reSchAppt) > 0) {
-      return $data;
+    if (count($reSchAppt) > 0) {      
       foreach ($result as $date => $datetimes) {
         foreach (array_keys($datetimes) as $arrk) {
           $apptList[] = $arrk;

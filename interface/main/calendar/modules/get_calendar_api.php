@@ -373,8 +373,8 @@ $amCounters = 0;
 $pmCounters = 0;
 $generalCounter = 0;
 
-$amLimit = empty($_REQUEST['amLimit']) ? 100 : $_REQUEST['amLimit'];
-$pmLimit = empty($_REQUEST['pmLimit']) ? 100 : $_REQUEST['pmLimit'];
+$amLimit = empty($_REQUEST['amLimit']) ? 200 : $_REQUEST['amLimit'];
+$pmLimit = empty($_REQUEST['pmLimit']) ? 200 : $_REQUEST['pmLimit'];
 $rschQuantity = empty($_REQUEST['rschquantity']) ? 0 : $_REQUEST['rschquantity'];
 $startdatetime = empty($_REQUEST['startdatetime']) ? "$sdate 00:00:00" : $_REQUEST['startdatetime'];
 

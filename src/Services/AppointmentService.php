@@ -218,7 +218,7 @@ class AppointmentService
       'fail' => array(),
     );
     if (count($reSchAppt) > 0) {
-      return $result;
+      return $data;
       foreach ($result as $date => $datetimes) {
         foreach (array_keys($datetimes) as $arrk) {
           $apptList[] = $arrk;

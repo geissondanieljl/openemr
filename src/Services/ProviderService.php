@@ -89,7 +89,7 @@ class ProviderService
                     AND ope.pc_eventDate = ?
                     AND ope.pc_apptstatus = 'AVM' ";
         $arrayParams = array($id, $eventDate);
-        if (array_key_exists('endtime', $data)) {
+        if (array_key_exists('endtime', $data) && $data['endtime'] != '') {
             $sql .= " AND TIME(ope.pc_startTime) >= TIME(?) AND TIME(ope.pc_endTime) <= TIME(?) ";
             $endTime = date("H:i:s", strtotime($data['endtime']));
             array_push($arrayParams, $startTime);
